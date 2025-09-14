@@ -1,5 +1,5 @@
 # Daily Production 
-This Power BI report delivers a comprehensive daily overview of completed units, offering clear insight into production across the calendar month. Users can interactively adjust the daily production goal to support parameter testing and scenario planning. The report dynamically calculates and visualizes Month-to-Date (MTD) goals alongside actual MTD performance, enabling teams to monitor progress and stay aligned with production targets.
+This Power BI report delivers a comprehensive daily overview of completed units, offering clear insight into production across the calendar month. Users can interactively adjust the daily production goal to support parameter testing and scenario planning. The report calculates and visualizes Month-to-Date (MTD) goals alongside actual MTD performance, enabling teams to monitor progress and stay aligned with production targets.
 
 If today were **August 15, 2022** and the **Product Line Nova Core** was selected, the report would appear as follows:
 
@@ -14,7 +14,12 @@ Above, the user is using the slider on the **Adjustable Goal (Daily)** visual to
   <img src="https://github.com/louisehealey/DailyProduction/blob/main/AdjustableGoal (daily).png"width="300" >
 </p>
 
-The Radical Gauge provides a high-level visual indicator of monthly production progress relative to the Month-to-Date (MTD) goal. Together, these visuals offer a clear and intuitive way for users to monitor output, and stay aligned with production targets throughout the month.
+At the The Radical Gauge (**Completed Units over Goal** visual) provides a high-level visual overview of monthly production progress relative to the Month-to-Date (MTD) goal. It divided the actual number of units produced MTD and divides it by the MTD goal
+
+<p align="center">
+  <img src="https://github.com/louisehealey/DailyProduction/blob/main/CompletedOverGoal.png "width="200" height="400">
+</p>
+
 
 ## Data Modeling:
 
