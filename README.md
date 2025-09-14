@@ -14,7 +14,7 @@ Above, the user is using the slider on the **Adjustable Goal (Daily)** visual to
   <img src="https://github.com/louisehealey/DailyProduction/blob/main/AdjustableGoal (daily).png"width="300" >
 </p>
 
-At the The Radical Gauge (**Completed Units over Goal** visual) provides a high-level visual overview of monthly production progress relative to the Month-to-Date (MTD) goal. It divided the actual number of units produced MTD and divides it by the MTD goal
+At the same time, the radical gauge (**Completed Units over Goal** visual) along with the other KPI's visuals (**MTD Actual** and **MTD Actual**) update automatically. These visuals provide a high-level visual overview of monthly production progress relative to the Month-to-Date (MTD) goal. The guage divides the actual number of units produced MTD by the MTD goal.
 
 <p align="center">
   <img src="https://github.com/louisehealey/DailyProduction/blob/main/CompletedOverGoal.png "width="200" height="400">
@@ -23,7 +23,7 @@ At the The Radical Gauge (**Completed Units over Goal** visual) provides a high-
 
 ## Data Modeling:
 
-### Generating a Date Table 
+### Generating a Date Table: 
 Adding a date table is essential when working with time-based data. In our case, it ensures continuity by preventing gaps or inconsistencies caused by business days when no units are completed. Without a date table, the report would simply skip over those inactive days, making it difficult to accurately analyze trends or performance over time.
 ``` 
 FiscalCalendar =
@@ -39,7 +39,7 @@ ADDCOLUMNS (
     "Quarter", "Q" & FORMAT(QUARTER([Date]), "0")
 )
 ```
-### Dates in Scope
+#### Dates in Scope
 Accurately calculating the number of business days in a month requires excluding non-business days such as weekends and holidays. Below is a simple formula to exclude weekends . 
 ``` 
 IsWeekday =
@@ -47,7 +47,7 @@ VAR DayNumber = WEEKDAY([Date], 2)
 RETURN
     IF(DayNumber <= 5, 1, 0)
 ``` 
-Excluding holidays is also necessary when determiing the worked days in scope. To capture holidays, you would need to load your companys fisical calendar into Power BI and add a `RELATED` or `LOOKUPVALUE` variable to pull in the additional dates you want to exclude. The below example :
+Excluding holidays is also necessary when determing the days in scope. To capture holidays, you would need to load your companys fisical calendar into Power BI and add a `RELATED` or `LOOKUPVALUE` variable to pull in the additional dates you want to exclude. The calculated column below excludes both weekends and the holidays.
 ```
 IsWorkday =
 VAR DayNumber = WEEKDAY([Date], 2)
@@ -56,8 +56,25 @@ VAR IsHoliday = IF([Date] IN VALUES(HolidayDates[HolidayDate]), 1, 0)
 RETURN
     IF(IsWeekend = 0 && IsHoliday = 0, 1, 0)
 ```
+### Generating a Table that Counts Completed Units
+Once the data related to completed units is loaded from the ERP and cleaned/ transormed, the following Calculated Columns can be added to the table for analysis
 
-## Generating a Paremeter for the What-if Analysis
+#### Calculated Columns:
+
+#### Measures: 
+
+The **Total Units** measure sums the total units completed. The `IF(ISBLANK())` statement ensures consistent numerical output across all dates, even when nothing is produced. Without it, the days where nothing is produced would return "Blank".
+```
+TotalUnits= 
+VAR TotalQuantity =
+    CALCULATE(
+        ABS(SUM('CLOSED_JOBS'[quantity]))
+    )
+RETURN
+    IF(ISBLANK(TotalQuantity), 0, TotalQuantity)
+The 
+
+#### Generating a Paremeter for the What-if Analysis
 Generating an Adjustable Paremeter, in our case it's the **Adjusted Daily Goal**, is simple. Go to Modeling > New Paremeter > Numeric Range. This will return the values below
 
 **The Table:**
@@ -70,17 +87,7 @@ AdjustedProductionGoal(m) = SELECTEDVALUE('Adjustable Production Goal'[Parameter
 ````
 ## Calculating the Total Units Produced 
 
-**Daily Total**
-```
-DailyTotals = 
-VAR SUMM =
-    CALCULATE(
-        ABS(SUM('CLOSED_JOBS'[quantity])),
-        'CLOSED_JOBS'[DateFilter] = "TRUE"
-    )
-RETURN
-    IF(ISBLANK(SUMM), 0, SUMM)
-```
+
 ## MTD Goal
 ```
 MTD Goal = 
