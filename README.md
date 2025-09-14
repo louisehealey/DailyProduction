@@ -1,13 +1,18 @@
 # Daily Production 
 This Power BI report delivers a comprehensive daily overview of completed units, offering clear insight into production across the calendar month. Users can interactively adjust the daily production goal to support parameter testing and scenario planning. The report dynamically calculates and visualizes Month-to-Date (MTD) goals alongside actual MTD performance, enabling teams to monitor progress and stay aligned with production targets.
 
-If today were **August 15, 2022** and the **Product Line Nova Core** was selected, the dashboard would appear as follows:
+If today were **August 15, 2022** and the **Product Line Nova Core** was selected, the report would appear as follows:
+
 
 <p align="center">
-  <img src="https://github.com/louisehealey/DailyProduction/blob/main/CompletedUnitsByDay.gif">
+  <img src="https://github.com/louisehealey/DailyProduction/blob/main/CompletedUnitsByDay.gif" >
 </p>
 
-The chart features a dynamic goal line that reflects the user-defined daily production target, adjustable via a slider or by entering a value between 25 and 300. Once a target is set, the bars respond in real time—turning green when the goal is met or exceeded, and red when production falls short. This immediate visual feedback allows users to quickly assess daily performance.
+Above, the user is using the slider on the **Adjustable Goal (Daily)** visual to select the desired daily production target. This value is represented by the yellow dotted goal line on the bar chart. Once a production target is set, the bars respond in real time—turning green when the goal is met or exceeded, and red when production falls short. This immediate visual feedback allows users to quickly assess daily performance.
+
+<p align="center">
+  <img src="https://github.com/louisehealey/DailyProduction/blob/main/AdjustableGoal (daily).png"width="300" >
+</p>
 
 The Radical Gauge provides a high-level visual indicator of monthly production progress relative to the Month-to-Date (MTD) goal. Together, these visuals offer a clear and intuitive way for users to monitor output, and stay aligned with production targets throughout the month.
 
