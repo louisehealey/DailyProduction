@@ -23,7 +23,7 @@ At the same time, the radical gauge (**Completed Units over Goal** visual) along
 
 ## Data Modeling:
 
-### Generating a Date Table: 
+### 📊 Generating a Date Table: 
 Adding a date table is essential when working with time-based data. In our case, it ensures continuity by preventing gaps or inconsistencies caused by business days when no units are completed. Without a date table, the report would simply skip over those inactive days, making it difficult to accurately analyze trends or performance over time.
 ``` 
 FiscalCalendar =
@@ -56,10 +56,10 @@ VAR IsHoliday = IF([Date] IN VALUES(HolidayDates[HolidayDate]), 1, 0)
 RETURN
     IF(IsWeekend = 0 && IsHoliday = 0, 1, 0)
 ```
-### Generating a Table that Counts Completed Units
-Once the data related to completed units is loaded from the ERP and cleaned/ transormed, the following Calculated Columns can be added to the table for analysis
+### 📊 Generating a Table that Counts Completed Units
+Loading tables that capture data related to the closure of jobs associated with finished units is a reliable method for tracking production output. This process typically involves importing transactional records, applying filters to isolate relevant action types, constraining the data to a specific date range, and removing unnecessary columns to optimize the data model's size and performance.
 
-#### Calculated Columns:
+Once the data is extracted, loaded, and transformed, the following measures can be created to visualize completed units effectively. For refrence, the table that holds this data is named `CLOSED_JOBS`
 
 #### Measures: 
 
@@ -72,9 +72,14 @@ VAR TotalQuantity =
     )
 RETURN
     IF(ISBLANK(TotalQuantity), 0, TotalQuantity)
-The 
+```
 
-#### Generating a Paremeter for the What-if Analysis
+The **Average Daily Total** is calculated below:
+```
+Find Calculation
+```
+
+### 📊 Generating a Paremeter for the What-if Analysis
 Generating an Adjustable Paremeter, in our case it's the **Adjusted Daily Goal**, is simple. Go to Modeling > New Paremeter > Numeric Range. This will return the values below
 
 **The Table:**
@@ -84,11 +89,11 @@ AdjustedProductionGoal = GENERATESERIES(0, 300, 25)
 **The Measure:**
 ```
 AdjustedProductionGoal(m) = SELECTEDVALUE('Adjustable Production Goal'[Parameter], 75)
+
 ````
-## Calculating the Total Units Produced 
+#### Measures:
 
-
-## MTD Goal
+The **MTD Goal** is a measure that multiplies the MTD buisness days by the what-if parameter `AdjustedProductionGoal(m)`
 ```
 MTD Goal = 
 VAR DaysInScope= COUNT(FiscalCalendar[Date])
@@ -97,21 +102,11 @@ RETURN
 DaysInScope * AdjGoal
 ```
 
-## Average Daily Total
+The measure for the Radical Gauage is below:
 ```
-Average Daily Total = 
-AVERAGEX(FiscalCalendar,[DailyTotals])
+TotalUnits =
+VAR DailyT= [DailyTotals]
+VAR MTDGoal= [MTD Goal]
+RETURN
+DailyT/[MTD Goal]
 ```
-
-## Changing Column Columns
-The **Adjusted Daily Goal** is a dynamic what-if parameter that enables dashboard users to modify the input value using a slicer. This allows them to explore various production output scenarios for the current calendar month.
-
-Once a goal is selected, the Adjusted Daily Goal amount is multiplied by the total number of business days in the current calendar month. The resulting value is visually represented by the dotted yellow line on the bar chart.
-
-After the Adjusted Daily Goal is calculated, it is compared against the actual daily production figures to determine whether the goal has been met. If the goal is met, the bar for that day turns green; otherwise, it remains red. This color-coding enables quick and intuitive visual analysis of daily performance.
-
-
-<p align="center">
-  <img src="https://github.com/louisehealey/DailyProduction/blob/main/CompletedUnitsByDay.gif" width="800"/>
-</p>
-
