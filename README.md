@@ -1,20 +1,6 @@
 # 📈 Daily Production Report
 
 This Power BI report provides a dynamic daily overview of completed units, offering clear insights into production trends across the calendar month. Users can interactively adjust the **Daily Production Goal** to support parameter testing and scenario planning.
-## 📚 Table of Contents
-
-- [📈 Daily Production Report](#-daily-production-report)
-- [🎯 Interactive Goal Setting](#-interactive-goal-setting)
-- [📊 KPI Snapshot: Completed Units Over Goal](#-kpi-snapshot-completed-units-over-goal)
-- [🧠 Data Modeling](#-data-modeling)
-- [📅 Generating a Date Table](#-generating-a-date-table)
-- [📆 Defining Business Days](#-defining-business-days)
-- [🏭 Tracking Completed Units](#-tracking-completed-units)
-- [🔧 Creating a What-If Parameter](#-creating-a-what-if-parameter)
-- [📈 Calculating MTD Goal](#-calculating-mtd-goal)
-- [🎯 Radial Gauge Measure](#-radial-gauge-measure)
-
-
 The report calculates and visualizes:
 - **Month-to-Date (MTD) Goals**
 - **Actual MTD Performance**
@@ -73,6 +59,23 @@ The data model consists of three core tables:
   <img src="https://github.com/louisehealey/DailyProduction/blob/main/DailyProductionModel.png">
 </p>
 
+### 📅 Generating a parameter for the What-if Analysis
+Generating an Adjustable parameter, in our case it's the **Adjusted Daily Goal**, is simple. Go to Modeling > New parameter > Numeric Range. This will return the values below
+
+**The Table:**
+```
+AdjustedProductionGoal = GENERATESERIES(0, 300, 25)
+```
+**The Measure:**
+```
+AdjustedProductionGoal(m) = SELECTEDVALUE('Adjustable Production Goal'[Parameter], 75)
+
+````
+### 📅 Generating a Table that Counts Completed Units
+Loading tables that capture data related to the closure of jobs associated with finished units is a reliable method for tracking production output. This process typically involves importing transactional records, applying filters to isolate relevant action types, constraining the data to a specific date range, and removing unnecessary columns to optimize the data model's size and performance.
+
+Once the data is extracted, loaded, and transformed, the following measures can be created to visualize completed units effectively. For reference, the table that holds this data is named `CLOSED_JOBS`
+
 ### 📅 Generating a Date Table
 
 A date table is essential for time-based analysis. It ensures continuity by preventing gaps caused by non-production days (e.g., weekends or holidays). Without it, the report would skip inactive days, making trend analysis unreliable.
@@ -91,7 +94,7 @@ ADDCOLUMNS (
 )
 ```
 #### Dates in Scope
-Accurately calculating the number of business days in a month requires excluding non-business days such as weekends and holidays. Below is a simple formula to exclude weekends . 
+Accurately calculating the number of business days in a month requires excluding non-business days such as weekends and holidays. Below is a simple formula to exclude weekends. 
 ``` 
 IsWorkDay =
 VAR DayNumber = WEEKDAY([Date], 2)
@@ -107,11 +110,6 @@ VAR IsHoliday = IF([Date] IN VALUES(HolidayDates[HolidayDate]), 1, 0)
 RETURN
     IF(IsWeekend = 0 && IsHoliday = 0, 1, 0)
 ```
-### 📅 Generating a Table that Counts Completed Units
-Loading tables that capture data related to the closure of jobs associated with finished units is a reliable method for tracking production output. This process typically involves importing transactional records, applying filters to isolate relevant action types, constraining the data to a specific date range, and removing unnecessary columns to optimize the data model's size and performance.
-
-Once the data is extracted, loaded, and transformed, the following measures can be created to visualize completed units effectively. For reference, the table that holds this data is named `CLOSED_JOBS`
-
 #### Measures: 
 
 The **Total Units** measure sums the total units completed. The `IF(ISBLANK())` statement ensures consistent numerical output across all dates, even when nothing is produced. Without it, the days where nothing is produced would return "Blank".
@@ -124,22 +122,6 @@ VAR TotalQuantity =
 RETURN
     IF(ISBLANK(TotalQuantity), 0, TotalQuantity)
 ```
-
-
-### 📅 Generating a parameter for the What-if Analysis
-Generating an Adjustable parameter, in our case it's the **Adjusted Daily Goal**, is simple. Go to Modeling > New parameter > Numeric Range. This will return the values below
-
-**The Table:**
-```
-AdjustedProductionGoal = GENERATESERIES(0, 300, 25)
-```
-**The Measure:**
-```
-AdjustedProductionGoal(m) = SELECTEDVALUE('Adjustable Production Goal'[Parameter], 75)
-
-````
-#### Measures:
-
 The **MTD Goal** is a measure that multiplies the MTD business days by the what-if parameter `AdjustedProductionGoal(m)`
 ```
 MTD Goal = 
@@ -148,7 +130,6 @@ VAR AdjGoal= [AdjustedProductionGoal(m)]
 RETURN
 DaysInScope * AdjGoal
 ```
-
 The measure for the Radical Gauage is below:
 ```
 TotalUnits =
@@ -157,3 +138,6 @@ VAR MTDGoal= [MTD Goal]
 RETURN
 DailyT/[MTD Goal]
 ```
+
+
+
