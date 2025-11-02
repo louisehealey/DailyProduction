@@ -1,6 +1,19 @@
 # 📈 Daily Production Report
 
 This Power BI report provides a dynamic daily overview of completed units, offering clear insights into production trends across the calendar month. Users can interactively adjust the **Daily Production Goal** to support parameter testing and scenario planning.
+## 📚 Table of Contents
+
+- [📈 Daily Production Report](#-daily-production-report)
+- [🎯 Interactive Goal Setting](#-interactive-goal-setting)
+- [📊 KPI Snapshot: Completed Units Over Goal](#-kpi-snapshot-completed-units-over-goal)
+- [🧠 Data Modeling](#-data-modeling)
+- [📅 Generating a Date Table](#-generating-a-date-table)
+- [📆 Defining Business Days](#-defining-business-days)
+- [🏭 Tracking Completed Units](#-tracking-completed-units)
+- [🔧 Creating a What-If Parameter](#-creating-a-what-if-parameter)
+- [📈 Calculating MTD Goal](#-calculating-mtd-goal)
+- [🎯 Radial Gauge Measure](#-radial-gauge-measure)
+
 
 The report calculates and visualizes:
 - **Month-to-Date (MTD) Goals**
