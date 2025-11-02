@@ -85,7 +85,7 @@ VAR DayNumber = WEEKDAY([Date], 2)
 RETURN
     IF(DayNumber <= 5, 1, 0)
 ``` 
-Excluding holidays is also necessary when determing the days in scope. To capture holidays, you would need to load your companys fisical calendar into Power BI and add a `RELATED` or `LOOKUPVALUE` variable to pull in the additional dates you want to exclude. The calculated column below excludes both weekends and the holidays.
+Excluding holidays is also necessary when determining the days in scope. To capture holidays, you would need to load your companys fiscal calendar into Power BI and add a `RELATED` or `LOOKUPVALUE` variable to pull in the additional dates you want to exclude. The calculated column below excludes both weekends and the holidays.
 ```
 IsWorkday =
 VAR DayNumber = WEEKDAY([Date], 2)
@@ -97,7 +97,7 @@ RETURN
 ### 📅 Generating a Table that Counts Completed Units
 Loading tables that capture data related to the closure of jobs associated with finished units is a reliable method for tracking production output. This process typically involves importing transactional records, applying filters to isolate relevant action types, constraining the data to a specific date range, and removing unnecessary columns to optimize the data model's size and performance.
 
-Once the data is extracted, loaded, and transformed, the following measures can be created to visualize completed units effectively. For refrence, the table that holds this data is named `CLOSED_JOBS`
+Once the data is extracted, loaded, and transformed, the following measures can be created to visualize completed units effectively. For reference, the table that holds this data is named `CLOSED_JOBS`
 
 #### Measures: 
 
@@ -113,8 +113,8 @@ RETURN
 ```
 
 
-### 📅 Generating a Paremeter for the What-if Analysis
-Generating an Adjustable Paremeter, in our case it's the **Adjusted Daily Goal**, is simple. Go to Modeling > New Paremeter > Numeric Range. This will return the values below
+### 📅 Generating a parameter for the What-if Analysis
+Generating an Adjustable parameter, in our case it's the **Adjusted Daily Goal**, is simple. Go to Modeling > New parameter > Numeric Range. This will return the values below
 
 **The Table:**
 ```
@@ -127,7 +127,7 @@ AdjustedProductionGoal(m) = SELECTEDVALUE('Adjustable Production Goal'[Parameter
 ````
 #### Measures:
 
-The **MTD Goal** is a measure that multiplies the MTD buisness days by the what-if parameter `AdjustedProductionGoal(m)`
+The **MTD Goal** is a measure that multiplies the MTD business days by the what-if parameter `AdjustedProductionGoal(m)`
 ```
 MTD Goal = 
 VAR DaysInScope= COUNT(FiscalCalendar[Date])
