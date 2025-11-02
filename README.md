@@ -1,26 +1,53 @@
-# Daily Production 
-This Power BI report delivers a comprehensive daily overview of completed units, offering clear insight into production across the calendar month. Users can interactively adjust the daily production goal to support parameter testing and scenario planning. The report calculates and visualizes Month-to-Date (MTD) goals alongside actual MTD performance, enabling teams to monitor progress and stay aligned with production targets.
+# 📈 Daily Production Report
+
+This Power BI report provides a dynamic daily overview of completed units, offering clear insights into production trends across the calendar month. Users can interactively adjust the **Daily Production Goal** to support parameter testing and scenario planning.
+
+The report calculates and visualizes:
+- **Month-to-Date (MTD) Goals**
+- **Actual MTD Performance**
+
+These metrics help teams monitor progress and stay aligned with production targets.
+
+## 🎯 Interactive Goal Setting
 
 If today were **August 15, 2022** and the **Product Line Nova Core** was selected, the report would appear as follows:
 
-
 <p align="center">
-  <img src="https://github.com/louisehealey/DailyProduction/blob/main/CompletedUnitsByDay.gif" >
+  <img src="https://github.com/louisehealey/DailyProduction/blob/main/CompletedUnitsByDay.gif">
 </p>
 
-Above, the user is using the slider on the **Adjustable Goal (Daily)** visual to select the desired daily production target. This value is represented by the yellow dotted goal line on the bar chart. Once a production target is set, the bars respond in real time—turning green when the goal is met or exceeded, and red when production falls short. This immediate visual feedback allows users to quickly assess daily performance.
+Users can adjust the **Daily Production Goal** using the slider in the **Adjustable Goal (Daily)** visual. This value is represented by the yellow dotted goal line on the bar chart. Bars update in real time:
+- ✅ **Green** when the goal is met or exceeded  
+- ❌ **Red** when production falls short
+
+This immediate visual feedback allows users to quickly assess daily performance.
 
 <p align="center">
-  <img src="https://github.com/louisehealey/DailyProduction/blob/main/AdjustableGoal (daily).png"width="300" >
+  <img src="https://github.com/louisehealey/DailyProduction/blob/main/AdjustableGoal%20(daily).png" width="300">
 </p>
 
-At the same time, the radical gauge (**Completed Units over Goal** visual) along with the other KPI's visuals (**MTD Actual** and **MTD Actual**) update automatically. These visuals provide a high-level visual overview of monthly production progress relative to the Month-to-Date (MTD) goal. The guage divides the actual number of units produced MTD by the MTD goal.
+## 📊 KPI Snapshot: Completed Units Over Goal
+
+The **radial gauge** visual (**Completed Units over Goal**) updates automatically alongside other KPIs:
+- **MTD Actual**
+- **MTD Goal**
+
+These visuals offer a high-level snapshot of monthly production progress. The radial gauge calculates the ratio of actual units produced MTD to the MTD goal, providing a quick visual cue of performance status.
 
 <p align="center">
-  <img src="https://github.com/louisehealey/DailyProduction/blob/main/CompletedOverGoal.png "width="200" height="400">
+  <img src="https://github.com/louisehealey/DailyProduction/blob/main/CompletedOverGoal.png" width="200" height="400">
 </p>
 
 
+## 🎨 Conditional Formatting Logic
+
+To apply dynamic color formatting to columns based on goal achievement, use the following DAX measure in the Format panel:
+
+```DAX
+ColumnDeterminate = 
+IF([AdjustableProductionGoal(m)] > [TotalUnits], "R", "G")
+```
+---
 ## Data Modeling:
 
 ### 📊 Generating a Date Table: 
@@ -42,7 +69,7 @@ ADDCOLUMNS (
 #### Dates in Scope
 Accurately calculating the number of business days in a month requires excluding non-business days such as weekends and holidays. Below is a simple formula to exclude weekends . 
 ``` 
-IsWeekday =
+IsWorkDay =
 VAR DayNumber = WEEKDAY([Date], 2)
 RETURN
     IF(DayNumber <= 5, 1, 0)
@@ -74,10 +101,6 @@ RETURN
     IF(ISBLANK(TotalQuantity), 0, TotalQuantity)
 ```
 
-The **Average Daily Total** is calculated below:
-```
-Find Calculation
-```
 
 ### 📊 Generating a Paremeter for the What-if Analysis
 Generating an Adjustable Paremeter, in our case it's the **Adjusted Daily Goal**, is simple. Go to Modeling > New Paremeter > Numeric Range. This will return the values below
