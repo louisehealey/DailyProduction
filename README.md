@@ -8,7 +8,7 @@ The report calculates and visualizes:
 
 These metrics help teams monitor progress and stay aligned with production targets.
 
-## 🎯 Interactive Goal Setting
+### 🎯 Interactive Goal Setting
 
 If today were **August 15, 2022** and the **Product Line Nova Core** was selected, the report would appear as follows:
 
@@ -26,7 +26,7 @@ This immediate visual feedback allows users to quickly assess daily performance.
   <img src="https://github.com/louisehealey/DailyProduction/blob/main/AdjustableGoal%20(daily).png" width="300">
 </p>
 
-## 📊 KPI Snapshot: Completed Units Over Goal
+### 📊 KPI Snapshot: Completed Units Over Goal
 
 The **radial gauge** visual (**Completed Units over Goal**) updates automatically alongside other KPIs:
 - **MTD Actual**
@@ -39,7 +39,7 @@ These visuals offer a high-level snapshot of monthly production progress. The ra
 </p>
 
 
-## 🎨 Conditional Formatting Logic
+### 🎨 Conditional Formatting Logic
 
 To apply dynamic color formatting to columns based on goal achievement, use the following DAX measure in the Format panel:
 
@@ -48,13 +48,24 @@ ColumnDeterminate =
 IF([AdjustableProductionGoal(m)] > [TotalUnits], "R", "G")
 ```
 ---
-## Data Modeling:
+## 🧠 Data Modeling
 
-### 📊 Generating a Date Table: 
-Adding a date table is essential when working with time-based data. In our case, it ensures continuity by preventing gaps or inconsistencies caused by business days when no units are completed. Without a date table, the report would simply skip over those inactive days, making it difficult to accurately analyze trends or performance over time.
-``` 
+The data model consists of three core tables:
+
+- **FiscalCalendar**: Provides time intelligence and connects to the `CLOSED_JOBS` fact table via a one-to-many relationship, enabling date-based filtering and aggregation.
+- **CLOSED_JOBS**: Captures daily job activity and production output, serving as the foundation for performance metrics.
+- **AdjustableProductionGoal**: Supports dynamic goal setting for scenario planning and interactive analysis.
+
+<p align="left">
+  <img src="https://github.com/louisehealey/DailyProduction/blob/main/DailyProductionModel.png">
+</p>
+
+### 📅 Generating a Date Table
+
+A date table is essential for time-based analysis. It ensures continuity by preventing gaps caused by non-production days (e.g., weekends or holidays). Without it, the report would skip inactive days, making trend analysis unreliable.
+
+```DAX
 FiscalCalendar =
-
 VAR EndDate = TODAY()
 VAR StartDate = DATE(YEAR(EndDate) - 1, MONTH(EndDate), DAY(EndDate))
 RETURN
@@ -83,7 +94,7 @@ VAR IsHoliday = IF([Date] IN VALUES(HolidayDates[HolidayDate]), 1, 0)
 RETURN
     IF(IsWeekend = 0 && IsHoliday = 0, 1, 0)
 ```
-### 📊 Generating a Table that Counts Completed Units
+### 📅 Generating a Table that Counts Completed Units
 Loading tables that capture data related to the closure of jobs associated with finished units is a reliable method for tracking production output. This process typically involves importing transactional records, applying filters to isolate relevant action types, constraining the data to a specific date range, and removing unnecessary columns to optimize the data model's size and performance.
 
 Once the data is extracted, loaded, and transformed, the following measures can be created to visualize completed units effectively. For refrence, the table that holds this data is named `CLOSED_JOBS`
@@ -102,7 +113,7 @@ RETURN
 ```
 
 
-### 📊 Generating a Paremeter for the What-if Analysis
+### 📅 Generating a Paremeter for the What-if Analysis
 Generating an Adjustable Paremeter, in our case it's the **Adjusted Daily Goal**, is simple. Go to Modeling > New Paremeter > Numeric Range. This will return the values below
 
 **The Table:**
