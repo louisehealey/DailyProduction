@@ -25,19 +25,6 @@ This immediate visual feedback allows users to quickly assess daily performance.
   <img src="https://github.com/louisehealey/DailyProduction/blob/main/AdjustableGoal%20(daily).png" width="300">
 </p>
 
-### 📊 KPI Snapshot: Completed Units Over Goal
-
-The **radial gauge** visual (**Completed Units over Goal**) updates automatically alongside other KPIs:
-- **MTD Actual**
-- **MTD Goal**
-
-These visuals offer a high-level snapshot of monthly production progress. The radial gauge calculates the ratio of actual units produced MTD to the MTD goal, providing a quick visual cue of performance status.
-
-<p align="center">
-  <img src="https://github.com/louisehealey/DailyProduction/blob/main/CompletedOverGoal.png" width="200" height="400">
-</p>
-
-
 ### 🎨 Conditional Formatting Logic
 
 To apply dynamic color formatting to columns based on goal achievement, use the following DAX measure in the Format panel:
@@ -46,6 +33,19 @@ To apply dynamic color formatting to columns based on goal achievement, use the 
 ColumnDeterminate = 
 IF([AdjustableProductionGoal(m)] > [TotalUnits], "R", "G")
 ```
+
+### 📊 KPI Snapshot: Completed Units Over Goal
+
+The **radial gauge** visual (**Completed Units over Goal**) updates automatically alongside other KPIs:
+- **MTD Completed** 
+- **MTD Goal**
+
+These visuals offer a high-level snapshot of monthly production progress. The radial gauge calculates the ratio of actual units produced MTD to the MTD goal, providing a quick visual cue of performance status.
+
+<p align="center">
+  <img src="https://github.com/louisehealey/DailyProduction/blob/main/CompletedOverGoal.png" width="200" height="400">
+</p>
+
 ---
 ## 🧠 Data Modeling
 
@@ -110,7 +110,7 @@ VAR IsHoliday = IF([Date] IN VALUES(HolidayDates[HolidayDate]), 1, 0)
 RETURN
     IF(IsWeekend = 0 && IsHoliday = 0, 1, 0)
 ```
-#### Measures: 
+#### Important Measures: 
 
 The **Total Units** measure sums the total units completed. The `IF(ISBLANK())` statement ensures consistent numerical output across all dates, even when nothing is produced. Without it, the days where nothing is produced would return "Blank".
 ```
